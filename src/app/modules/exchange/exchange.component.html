@@ -33,7 +33,7 @@
     </div>
 
     <div class="container-price">
-      <h1>{{ exchangeRate.exchangeRate | currency : service.brlSymbol }}</h1>
+      <h1>{{ exchangeRate.exchangeRate | currency : symbol }}</h1>
     </div>
 
     <mat-accordion>
@@ -60,22 +60,22 @@
               <div>
                 <p>
                   <span>Open:</span>
-                  <span>{{ item.open | currency : service.brlSymbol }} </span>
+                  <span>{{ item.open | currency : symbol }} </span>
                 </p>
                 <p>
                   <span>Close:</span>
-                  <span>{{ item.close | currency : service.brlSymbol }}</span>
+                  <span>{{ item.close | currency : symbol }}</span>
                 </p>
               </div>
 
               <div>
                 <p>
                   <span>High:</span>
-                  <span>{{ item.high | currency : service.brlSymbol }}</span>
+                  <span>{{ item.high | currency : symbol }}</span>
                 </p>
                 <p>
                   <span>Low:</span>
-                  <span>{{ item.low | currency : service.brlSymbol }}</span>
+                  <span>{{ item.low | currency : symbol }}</span>
                 </p>
               </div>
             </div>

@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ExchangeService } from 'src/app/core/service/exchange.service';
 import { ExchangeRateList } from 'src/app/interfaces/ExchangeRateList.interface';
+import { Environment as env} from 'src/environments/Environment';
 
 @Component({
   selector: 'app-exchange',
@@ -15,6 +16,8 @@ export class ExchangeComponent {
   hasCalledRate: boolean = false;
   loading: boolean = false;
   panelExpanded: boolean = false;
+
+  symbol: string = env.symbol;
 
   exchangeRate: any = {
     exchangeRate: 5.0357,
