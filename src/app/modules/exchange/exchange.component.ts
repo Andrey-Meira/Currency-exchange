@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { ExchangeService } from 'src/app/core/service/exchange.service';
+import { ExchangeRateList } from 'src/app/interfaces/ExchangeRateList.interface';
 
 @Component({
   selector: 'app-exchange',
@@ -7,11 +10,13 @@ import { ExchangeService } from 'src/app/core/service/exchange.service';
   styleUrls: ['./exchange.component.scss'],
 })
 export class ExchangeComponent {
-  showCurrency: boolean = true;
+  showCurrency: boolean = false;
   code: string = '';
   hasCalledRate: boolean = false;
+  loading: boolean = false;
+  panelExpanded: boolean = false;
 
-  obj: any = {
+  exchangeRate: any = {
     exchangeRate: 5.0357,
     fromSymbol: 'USD',
     lastUpdatedAt: '2023-05-31T03:12:22.000+00:00',
@@ -19,86 +24,163 @@ export class ExchangeComponent {
     toSymbol: 'BRL',
   };
 
-  exchangeRate: any = [
+  exchangeRateList: ExchangeRateList[] = [
     {
-      close: 5.0357,
+      close: 0.03597,
       date: '2023-05-31T03:00:00.000+00:00',
-      high: 5.0419,
-      low: 5.0357,
-      open: 5.0419,
+      high: 0.03597,
+      low: 0.03576,
+      open: 0.03594,
     },
     {
-      close: 5.0419,
+      close: 0.03595,
       date: '2023-05-30T03:00:00.000+00:00',
-      high: 5.0686,
-      low: 4.9986,
-      open: 5.0131,
+      high: 0.03612,
+      low: 0.03558,
+      open: 0.03558,
     },
     {
-      close: 5.0131,
+      close: 0.03559,
       date: '2023-05-29T03:00:00.000+00:00',
-      high: 5.0201,
-      low: 4.9732,
-      open: 4.9939,
+      high: 0.03563,
+      low: 0.03539,
+      open: 0.0354,
+    },
+    {
+      close: 0.03539,
+      date: '2023-05-26T03:00:00.000+00:00',
+      high: 0.03591,
+      low: 0.03531,
+      open: 0.03579,
+    },
+    {
+      close: 0.03584,
+      date: '2023-05-25T03:00:00.000+00:00',
+      high: 0.03589,
+      low: 0.03536,
+      open: 0.03541,
+    },
+    {
+      close: 0.03542,
+      date: '2023-05-24T03:00:00.000+00:00',
+      high: 0.03586,
+      low: 0.03537,
+      open: 0.0358,
+    },
+    {
+      close: 0.0358,
+      date: '2023-05-23T03:00:00.000+00:00',
+      high: 0.03586,
+      low: 0.03559,
+      open: 0.03572,
+    },
+    {
+      close: 0.03566,
+      date: '2023-05-22T03:00:00.000+00:00',
+      high: 0.03619,
+      low: 0.03565,
+      open: 0.03613,
     },
   ];
 
-  constructor(public service: ExchangeService) {}
+  constructor(
+    public service: ExchangeService,
+    private _snackBar: MatSnackBar
+  ) {}
 
   getCurrentExchange() {
-    console.log(this.code);
-
     if (!this.code) {
       return false;
     }
 
+    this.loading = true;
+
     this.code = this.code.toLocaleUpperCase();
-    // this.service.getCurrentExchange(this.code).subscribe({
-    //   next: (data) => {
-    //     console.log(data);
-
-    this.obj = {
-      exchangeRate: 5.0357,
-      fromSymbol: 'USD',
-      lastUpdatedAt: '2023-05-31T03:12:22.000+00:00',
-      success: true,
-      toSymbol: 'BRL',
-    };
-    //   },
-    //   error: (err) => {
-    //     console.log(err);
-    //   },
-    // });
+    this.service.getCurrentExchange(this.code).subscribe({
+      next: (data) => {
+        this.hasCalledRate = false;
+        this.loading = false;
+        if (!data.success) {
+          this._snackBar.open(
+            'Ocorreu um erro, por favor tente novamente',
+            'Fechar',
+            {
+              horizontalPosition: 'end',
+            }
+          );
+          return false;
+        }
+        this.exchangeRate = data;
+        this.showCurrency = true;
+        return true;
+      },
+      error: (err) => {
+        console.log(err);
+        this.loading = false;
+        this._snackBar.open(
+          'Ocorreu um erro, por favor tente novamente',
+          'Fechar',
+          {
+            horizontalPosition: 'end',
+          }
+        );
+      },
+    });
     return true;
-
-    // this.showCurrency = !this.showCurrency;
-    // this.teste = !this.teste;
   }
 
   getExchangeRate() {
+    this.panelExpanded = true;
+
     if (this.hasCalledRate) {
       return true;
     }
 
-    this.exchangeRate.forEach((item: any) => {
-      item.diff = this.calculateDiff(item.close);
-    });
+    this.exchangeRateList = [];
+    this.service.getExchangeRate(this.code).subscribe({
+      next: (data) => {
+        if (!data.success) {
+          this._snackBar.open(
+            'Ocorreu um erro, por favor tente novamente',
+            'Fechar',
+            {
+              horizontalPosition: 'end',
+            }
+          );
+          return false;
+        }
+        this.hasCalledRate = true;
+        this.exchangeRateList = data.data;
+        this.exchangeRateList.splice(0, 1);
 
-    // this.service.getExchangeRate(this.code).subscribe({
-    //   next: (data) => {
-    //     console.log(data);
-    //     this.exchangeRate = data.data;
-    //   },
-    //   error: (err) => {
-    //     console.log(err);
-    //   },
-    // });
+        this.exchangeRateList.forEach((item: any) => {
+          item.diff = this.calculateDiff(item.close);
+        });
+
+        return true;
+      },
+      error: (err) => {
+        console.log(err);
+        this._snackBar.open(
+          'Ocorreu um erro, por favor tente novamente',
+          'Fechar',
+          {
+            horizontalPosition: 'end',
+          }
+        );
+      },
+    });
 
     return false;
   }
 
   calculateDiff(close: number) {
-    console.log(close);
-    return (((this.obj.exchangeRate - close) / close) * 100).toFixed(2);
+    return (((this.exchangeRate.exchangeRate - close) / close) * 100).toFixed(
+      2
+    );
+  }
+
+  closeCurrency() {
+    this.showCurrency = false;
   }
 }

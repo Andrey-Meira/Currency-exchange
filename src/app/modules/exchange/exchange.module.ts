@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [ExchangeComponent],
@@ -18,7 +19,8 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     MatExpansionModule,
     MatCardModule,
-    FormsModule
+    FormsModule,
+    MatSnackBarModule
   ],
 })
 export class ExchangeModule {}

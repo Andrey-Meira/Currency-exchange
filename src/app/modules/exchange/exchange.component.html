@@ -1,71 +1,105 @@
-<div class="container">
-  <h2>BRL EXCHANGE RATE</h2>
+<div class="main-content">
+  <div class="container">
+    <h2>BRL EXCHANGE RATE</h2>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Enter the currency code</mat-label>
-    <input matInput placeholder="USD" [(ngModel)]="code" />
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Enter the currency code</mat-label>
+      <input
+        matInput
+        placeholder="USD"
+        [(ngModel)]="code"
+        required
+        (ngModelChange)="showCurrency = false"
+      />
+    </mat-form-field>
 
-  <button class="btn" (click)="getCurrentExchange()">EXCHANGE RESULT</button>
-</div>
+    <button
+      type="submit"
+      [disabled]="loading"
+      class="btn"
+      (click)="getCurrentExchange()"
+    >
+      EXCHANGE RESULT
+    </button>
+  </div>
 
-<ng-container *ngIf="showCurrency">
-  <div class="header-exchange">
-    <div>
-      <span> Exchange rate now</span>
-      <p>{{ obj.lastUpdatedAt | date : "short" }}</p>
+  <ng-container *ngIf="!loading && showCurrency">
+    <div class="header-exchange">
+      <div>
+        <span> Exchange rate now</span>
+        <p>{{ exchangeRate.lastUpdatedAt | date : "short" }}</p>
+      </div>
+      <div class="code">{{ code }}/BRL</div>
     </div>
-    <div class="code">{{ code }}/BRL</div>
-  </div>
 
-  <div class="container-price">
-    <h1>{{ obj.exchangeRate | currency : service.brlSymbol }}</h1>
-  </div>
+    <div class="container-price">
+      <h1>{{ exchangeRate.exchangeRate | currency : service.brlSymbol }}</h1>
+    </div>
 
-  <mat-accordion>
-    <mat-expansion-panel hideToggle (opened)="getExchangeRate()">
-      <mat-expansion-panel-header>
-        <mat-panel-title> LAST 30 DAYS </mat-panel-title>
-      </mat-expansion-panel-header>
+    <mat-accordion>
+      <mat-expansion-panel
+        hideToggle
+        (opened)="getExchangeRate()"
+        (closed)="panelExpanded = false"
+      >
+        <mat-expansion-panel-header class="panel-heeader">
+          <mat-panel-title> LAST 30 DAYS </mat-panel-title>
 
-      <mat-card *ngFor="let item of exchangeRate" class="card-exchange">
-        <!-- <span class="date"> 09/03/2022 </span> -->
-        <span class="date"> {{ item.date | date : "shortDate" }} </span>
+          <i *ngIf="!panelExpanded" class="fa-solid fa-plus"></i>
+          <i *ngIf="panelExpanded" class="fa-solid fa-minus"></i>
+        </mat-expansion-panel-header>
 
-        <div class="content-card">
-          <div>
-            <p>
-              <span>Open:</span>
-              <span>{{ item.open | currency : service.brlSymbol }} </span>
+        <ng-container *ngIf="exchangeRateList.length">
+          <mat-card
+            *ngFor="let item of exchangeRateList | slice : 0 : 30"
+            class="card-exchange"
+          >
+            <span class="date"> {{ item.date | date : "shortDate" }} </span>
+
+            <div class="content-card">
+              <div>
+                <p>
+                  <span>Open:</span>
+                  <span>{{ item.open | currency : service.brlSymbol }} </span>
+                </p>
+                <p>
+                  <span>Close:</span>
+                  <span>{{ item.close | currency : service.brlSymbol }}</span>
+                </p>
+              </div>
+
+              <div>
+                <p>
+                  <span>High:</span>
+                  <span>{{ item.high | currency : service.brlSymbol }}</span>
+                </p>
+                <p>
+                  <span>Low:</span>
+                  <span>{{ item.low | currency : service.brlSymbol }}</span>
+                </p>
+              </div>
+            </div>
+
+            <p *ngIf="item.diff" class="diff">
+              close diff (%):
+              <span [ngClass]="{ green: item.diff >= 0, red: item.diff < 0 }">
+                <span *ngIf="item.diff > 0">+</span>
+                {{ item.diff }}
+                <i *ngIf="item.diff > 0" class="fa-solid fa-angle-up"></i>
+                <i *ngIf="item.diff < 0" class="fa-solid fa-angle-down"></i>
+              </span>
             </p>
-            <p>
-              <span>Close:</span>
-              <span>{{ item.close | currency : service.brlSymbol }}</span>
-            </p>
-          </div>
+          </mat-card>
+        </ng-container>
 
-          <div>
-            <p>
-              <span>High:</span>
-              <span>{{ item.high | currency : service.brlSymbol }}</span>
-            </p>
-            <p>
-              <span>Low:</span>
-              <span>{{ item.low | currency : service.brlSymbol }}</span>
-            </p>
-          </div>
+        <div *ngIf="!exchangeRateList.length" class="loading">
+          <i class="fa-solid fa-spinner fa-spin"></i>
         </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ng-container>
 
-        <p class="diff">
-          close diff (%):
-          <span [ngClass]="{ green: item.diff >= 0, red: item.diff < 0 }">
-            <span *ngIf="item.diff > 0">+</span>
-            {{ item.diff }}
-            <i *ngIf="item.diff > 0" class="fas fa-angle-up"></i>
-            <i *ngIf="item.diff < 0" class="fas fa-angle-down"></i>
-          </span>
-        </p>
-      </mat-card>
-    </mat-expansion-panel>
-  </mat-accordion>
-</ng-container>
+  <div *ngIf="loading" class="loading">
+    <i class="fa-solid fa-spinner fa-spin"></i>
+  </div>
+</div>

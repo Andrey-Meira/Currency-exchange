@@ -1,3 +1,8 @@
+.main-content {
+  margin: 8px 8px 0 8px;
+  min-height: 100%;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -11,12 +16,6 @@
     font-size: 2em;
     letter-spacing: 1px;
   }
-
-  //   mat-form-field {
-  //     width: auto;
-  //     // width: -webkit-fill-available;
-  //     // width: -moz-available;
-  //   }
 
   .btn {
     background-color: #07b0fb;
@@ -72,6 +71,8 @@
 
 .card-exchange {
   padding: 15px;
+  margin-bottom: 10px;
+
   .content-card {
     display: flex;
     justify-content: space-between;
@@ -110,3 +111,22 @@
     }
   }
 }
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  i {
+    font-size: 30px;
+    color: #07b0fb;
+  }
+}
+
+.panel-heeader {
+  i {
+    color: #07b0fb;
+    font-size: 1.5em;
+  }
+}
+
+
