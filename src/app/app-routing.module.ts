@@ -10,7 +10,7 @@ const routes: Routes = [
   {
     pathMatch: 'full',
     path: 'home',
-    loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule)
+    loadChildren: () => import('./modules/exchange/exchange.module').then(m => m.ExchangeModule)
   },
 ];
 
