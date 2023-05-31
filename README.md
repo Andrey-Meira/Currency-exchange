@@ -1,27 +1,33 @@
-# Teste
+# Currency exchange
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.4.
+Essa é uma aplicação Angular que permite visualizar o câmbio monetário atual do real brasileiro (BRL) em relação a diferentes moedas estrangeiras, bem como o histórico dos últimos 30 dias.
 
-## Development server
+## Configuração
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Certifique-se de ter o [Node.js](https://nodejs.org) instalado na sua máquina antes de prosseguir.
 
-## Code scaffolding
+1. Faça o clone deste repositório para o seu ambiente local.
+2. Navegue até o diretório raiz da aplicação.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```bash
+cd currency-exchange
+```
 
-## Build
+3. Instale as dependências necessárias.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```
+npm install
+```
 
-## Running unit tests
+## Uso
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Para executar a aplicação localmente, utilize o seguinte comando:
 
-## Running end-to-end tests
+```
+ng serve
+```
+Acesse a aplicação no seu navegador através do endereço [http://localhost:4200](http://localhost:4200).
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Funcionalidades
+- Ao digitar o codigo de um país, o câmbio monetário atual em relação ao real brasileiro será exibido.
+- É possível visualizar o histórico de câmbio monetário dos últimos 30 dias.
