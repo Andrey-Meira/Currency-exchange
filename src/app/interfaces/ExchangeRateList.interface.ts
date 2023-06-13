@@ -1,8 +1,10 @@
+import { ExchangeRateListItem } from './ExchangeRateListItem.interface';
+
 export interface ExchangeRateList {
-  close: number;
-  date: string;
-  high: number;
-  low: number;
-  open: number;
-  diff?: number;
+  data: ExchangeRateListItem[];
+  from: string;
+  lastUpdatedAt: string;
+  rateLimitExceeded: boolean;
+  success: boolean;
+  to: string;
 }

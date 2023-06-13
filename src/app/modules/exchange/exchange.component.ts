@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ExchangeService } from 'src/app/core/service/exchange.service';
 import { ExchangeRate } from 'src/app/interfaces/ExchangeRate.interface';
 import { ExchangeRateList } from 'src/app/interfaces/ExchangeRateList.interface';
+import { ExchangeRateListItem } from 'src/app/interfaces/ExchangeRateListItem.interface';
 import { Environment as env } from 'src/environments/Environment';
 
 @Component({
@@ -19,7 +20,7 @@ export class ExchangeComponent {
   loading: boolean = false;
   panelExpanded: boolean = false;
   exchangeRate!: ExchangeRate;
-  exchangeRateList: ExchangeRateList[] = [];
+  exchangeRateList: ExchangeRateListItem[] = [];
 
   constructor(
     public service: ExchangeService,
@@ -91,9 +92,16 @@ export class ExchangeComponent {
         this.exchangeRateList = data.data;
         this.exchangeRateList.splice(0, 1);
 
-        this.exchangeRateList.forEach((item: any) => {
-          item.diff = this.calculateDiff(item.close);
-        });
+        this.exchangeRateList.forEach(
+          (item: ExchangeRateListItem, index: number) => {
+            item.diff = this.calculateDiff(
+              item.close,
+              index > 0
+                ? this.exchangeRateList[index - 1].close
+                : this.exchangeRate.exchangeRate
+            );
+          }
+        );
 
         return true;
       },
@@ -112,10 +120,8 @@ export class ExchangeComponent {
     return false;
   }
 
-  calculateDiff(close: number) {
-    return (((this.exchangeRate.exchangeRate - close) / close) * 100).toFixed(
-      2
-    );
+  calculateDiff(close: number, lastClose: number) {
+    return parseFloat((((lastClose - close) / close) * 100).toFixed(2));
   }
 
   closeCurrency() {
